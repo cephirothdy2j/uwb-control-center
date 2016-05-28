@@ -1,0 +1,22 @@
+{
+  "name": "uwb-control-center",
+  "authors": [
+    "Dylan Schuster <dylan@getstructure.io>"
+  ],
+  "description": "A web-based GUI for controlling the Losant Uptown Weather Beacon",
+  "main": "index.html",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "rangeslider.js": "^2.1.1",
+    "bootstrap": "^3.3.6"
+  }
+}

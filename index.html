@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>UWB Control Center</title>
+
+<!-- Bootstrap -->
+<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- range slider default -->
+<link href="bower_components/rangeslider.js/dist/rangeslider.css" rel="stylesheet" />
+<!-- custom styles -->
+<style>
+  .btn-custom {
+    background: #333; background: rgba(0,0,0,0.3);
+    color: #fff;
+  }
+  .btn-custom:hover {
+    color: #fff;
+    background: #000; background: rgba(0,0,0,0.5);
+  }
+  .rangeslider {margin-bottom: 30px;}
+  .rangeslider__fill {
+    background: transparent;
+  }
+  #js-rangeslider-0 {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff0000+0,ff0000+100&0+0,1+100 */
+background: -moz-linear-gradient(left,  rgba(255,0,0,0) 0%, rgba(255,0,0,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(left,  rgba(255,0,0,0) 0%,rgba(255,0,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to right,  rgba(255,0,0,0) 0%,rgba(255,0,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ff0000', endColorstr='#ff0000',GradientType=1 ); /* IE6-9 */
+
+  }
+  #js-rangeslider-1 {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff0000+0,ff0000+100&0+0,1+100 */
+background: -moz-linear-gradient(left,  rgba(0,255,0,0) 0%, rgba(0,255,0,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(left,  rgba(0,255,0,0) 0%,rgba(0,255,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to right,  rgba(0,255,0,0) 0%,rgba(0,255,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0000ff00', endColorstr='#00ff00',GradientType=1 ); /* IE6-9 */
+
+  }
+  #js-rangeslider-2 {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ff0000+0,ff0000+100&0+0,1+100 */
+background: -moz-linear-gradient(left,  rgba(0,0,255,0) 0%, rgba(0,0,255,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(left,  rgba(0,0,255,0) 0%,rgba(0,0,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to right,  rgba(0,0,255,0) 0%,rgba(0,0,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000ff', endColorstr='#0000ff',GradientType=1 ); /* IE6-9 */
+
+  }
+</style>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Show Time / Weather</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <button class="btn btn-block btn-success on-off" data-value="on" data-label="Turn On"></button>
+      </div>
+      <div class="col-xs-6">
+        <button class="btn btn-block btn-danger on-off" data-value="off" data-label="Turn Off"></button>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Force Color</h4>
+        <input type="range" value="40" min="0" max="255" class="color-range" id="range-r">
+        <input type="range" value="79" min="0" max="255" class="color-range" id="range-g">
+        <input type="range" value="255" min="0" max="255" class="color-range" id="range-b">
+        <div style="padding:20px" class="custom-color-bg">
+          <button class="btn btn-block btn-custom force-color" data-label="Display Time"></button>
+          <button class="btn btn-block btn-custom run-anim" data-value="colorWipe" data-label="Color Wipe Anim."></button>
+          <button class="btn btn-block btn-custom run-anim" data-value="theaterChase" data-label="Theater Chase Anim."></button>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>Special Animations</h4>
+        <button class="btn btn-block btn-primary run-anim" data-value="rainbow" data-label="Rainbow"></button>
+        <button class="btn btn-block btn-primary run-anim" data-value="rainbowCycle" data-label="Rainbow Cycle"></button>
+        <button class="btn btn-block btn-primary run-anim" data-value="theaterChaseRainbow" data-label="Theater Chase Rainbow"></button>
+      </div>
+    </div>
+
+  </div>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- minified range slider -->
+<script src="bower_components/rangeslider.js/dist/rangeslider.min.js"></script>
+<script>
+
+  function setColorBg() {
+    var color = {};
+    color.r = $('#range-r').val();
+    color.g = $('#range-g').val();
+    color.b = $('#range-b').val();
+    $('.custom-color-bg').css('background','rgb('+color.r+','+color.g+','+color.b+')');
+  }
+  $('input[type="range"]').on('change',setColorBg);
+  setColorBg();
+  // set initial labels
+	$('.btn').each(function() {
+		$(this).html($(this).data('label'));
+	});
+  // make pretty range sliders
+  $('input[type="range"]').rangeslider({
+    polyfill:false,
+  });
+	$('.btn').click(function(e) {
+		e.preventDefault();
+		var webhookUrl;
+    var data = {};
+    var value = $(this).data('value');
+    var label = $(this).data('label');
+    var self = this;
+    data.color = {
+      r:parseInt($('#range-r').val(), 10),
+      g:parseInt($('#range-g').val(), 10),
+      b:parseInt($('#range-b').val(), 10)
+    };
+		if($(this).hasClass('run-anim')) { // animations
+			webhookUrl = 'ANIMATION WEBHOOK URL HERE';
+      data.animName = value;
+		} else if($(this).hasClass('force-color')) { // color force
+			webhookUrl = 'FORCE COLOR WEBHOOK URL HERE';
+		} else if($(this).hasClass('on-off')) {
+			webhookUrl = 'ON/OFF WEBHOOK URL HERE';
+      data.turnOn = false;
+      if(value === 'on') data.turnOn = true;
+		}
+		if(!webhookUrl) {
+      return;
+    }
+    $(this).prop('disabled',true);
+    $(this).html('Sending ...');
+    $.post(webhookUrl, data)
+      .done(function() {
+        $(self).html('Success!');
+      })
+      .fail(function() {
+        $(self).html('Failed!');
+      })
+      .always(function() {
+        setTimeout(function() {
+          $(self).html(label);
+          $(self).prop('disabled',false);
+        }, 1000);
+      });
+	});
+</script>
+</body>
+</html>
